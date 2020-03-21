@@ -9,6 +9,7 @@ class SocketComponent extends Component {
         this.state = {
             messageValue : '',
             response : [],
+            idRoom : "5e76242b8163472ec88fc4a0",
             endpoint : "http://192.168.1.8:8888/"
         };
 
@@ -17,10 +18,10 @@ class SocketComponent extends Component {
     }
 
     componentDidMount () {
-        const { endpoint } = this.state;
+        const { endpoint, idRoom } = this.state;
         const socket = socketIOClient( endpoint );
 
-        socket.on( "SendMessage", data => {
+        socket.on( idRoom, data => {
             this.setState( state => {
                 return {
                     response : this.state.response.concat( data )
@@ -38,14 +39,14 @@ class SocketComponent extends Component {
 
     onSubmit ( e ) {
         e.preventDefault();
-        const { messageValue, endpoint } = this.state;
+        const { messageValue, endpoint, idRoom } = this.state;
         const socket = socketIOClient( endpoint );
 
         if ( !messageValue || messageValue.trim() === '' ) {
             return;
         }
 
-        socket.emit( "SendMessage", messageValue );
+        socket.emit( idRoom, messageValue );
 
         this.setState( state => ( {
             messageValue : ''
