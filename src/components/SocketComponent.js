@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import socketIOClient from "socket.io-client";
 import SocketView from './views/SocketView';
 import SocketInput from './views/SocketInput';
@@ -9,8 +10,8 @@ class SocketComponent extends Component {
         this.state = {
             messageValue : '',
             response : [],
-            idRoom : "5e76242b8163472ec88fc4a0",
-            endpoint : "http://192.168.1.8:8888/"
+            idRoom : "5e772cb9c4d8c70017da0e22",
+            endpoint : "https://express-server-chat.herokuapp.com"
         };
 
         this.onChange = this.onChange.bind( this );
@@ -20,6 +21,19 @@ class SocketComponent extends Component {
     componentDidMount () {
         const { endpoint, idRoom } = this.state;
         const socket = socketIOClient( endpoint );
+
+        axios.get( endpoint + '/rooms' )
+            .then( res => {
+                res.data.message.map( item => {
+                    return this.setState( state => {
+                        return {
+                            idRoom : item._id
+                        }
+                    } );
+                });
+
+            } )
+            .catch( err => console.log( err ) );
 
         socket.on( idRoom, data => {
             this.setState( state => {
