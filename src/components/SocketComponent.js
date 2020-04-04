@@ -3,6 +3,14 @@ import axios from "axios";
 import socketIOClient from "socket.io-client";
 import SocketView from './views/SocketView';
 import SocketInput from './views/SocketInput';
+import ReduxStore from './ReduxStore';
+
+const removeUsersOnStore = () => {
+    ReduxStore.dispatch( {
+        type : "LOGOUT_USER"
+    } );
+    return;
+};
 
 class SocketComponent extends Component {
     constructor () {
@@ -13,35 +21,42 @@ class SocketComponent extends Component {
             idRoom : "5e772cb9c4d8c70017da0e22",
             endpoint : "https://express-server-chat.herokuapp.com"
         };
-
+        this.cpnMounted = false;
+        this.socket = socketIOClient( this.state.endpoint );
         this.onChange = this.onChange.bind( this );
         this.onSubmit = this.onSubmit.bind( this );
     }
 
-    componentDidMount () {
+    async componentDidMount () {
         const { endpoint, idRoom } = this.state;
-        const socket = socketIOClient( endpoint );
+        this.cpnMounted = true;
 
         axios.get( endpoint + '/rooms' )
             .then( res => {
                 res.data.message.map( item => {
-                    return this.setState( state => {
-                        return {
-                            idRoom : item._id
-                        }
-                    } );
-                });
+                    if ( this.cpnMounted ) {
+                        this.setState( state => {
+                            return {
+                                idRoom : item._id
+                            }
+                        } );
+                    }
+                    return true;
+                } );
 
             } )
             .catch( err => console.log( err ) );
 
-        socket.on( idRoom, data => {
-            this.setState( state => {
-                return {
-                    response : this.state.response.concat( data )
-                }
-            } );
+        this.socket.on( idRoom, data => {
+            if ( this.cpnMounted ) {
+                this.setState( state => {
+                    return {
+                        response : this.state.response.concat( data )
+                    }
+                } );
+            }
         } );
+
     }
 
     onChange ( e ) {
@@ -53,18 +68,22 @@ class SocketComponent extends Component {
 
     onSubmit ( e ) {
         e.preventDefault();
-        const { messageValue, endpoint, idRoom } = this.state;
-        const socket = socketIOClient( endpoint );
+        const { messageValue, idRoom } = this.state;
 
         if ( !messageValue || messageValue.trim() === '' ) {
             return;
         }
 
-        socket.emit( idRoom, messageValue );
+        this.socket.emit( idRoom, messageValue );
 
         this.setState( state => ( {
             messageValue : ''
         } ) );
+    }
+
+    componentWillUnmount () {
+        this.cpnMounted = false;
+        this.socket.disconnect();
     }
 
     render () {
@@ -87,6 +106,9 @@ class SocketComponent extends Component {
                     onChange={ this.onChange }
                     value={ messageValue }
                 />
+                <div className="text-center mt-4 change-state">
+                    <u onClick={ removeUsersOnStore }>{ 'Logout!' }</u>
+                </div>
             </div>
         );
     }

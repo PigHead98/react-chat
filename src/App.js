@@ -2,15 +2,28 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import SocketComponent from './components/SocketComponent';
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <SocketComponent/>
-      </header>
-    </div>
-  );
+import Index from './components/Login/Index';
+import { connect } from 'react-redux';
+
+function App ( { currentUser } ) {
+    return (
+        <div className="App">
+            <header className="App-header">
+                <img src={ logo } className="App-logo" alt="logo"/>
+                {
+                    Object.keys(currentUser).length > 0 ?
+                        <SocketComponent/>
+                        :
+                        <Index/>
+                }
+            </header>
+        </div>
+    );
 }
 
-export default App;
+const mapStateCurrentUserToProps = ( state ) => {
+    return {
+        currentUser : state.currentUser
+    }
+};
+export default connect( mapStateCurrentUserToProps )( App );
