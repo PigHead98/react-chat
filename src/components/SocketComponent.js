@@ -1,20 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { connect } from 'react-redux';
 import socketIOClient from "socket.io-client";
+
 import SocketView from './views/SocketView';
 import SocketInput from './views/SocketInput';
-import ReduxStore from './ReduxStore';
-
-const removeUsersOnStore = () => {
-    ReduxStore.dispatch( {
-        type : "LOGOUT_USER"
-    } );
-    return;
-};
 
 class SocketComponent extends Component {
-    constructor () {
-        super();
+    constructor ( props ) {
+        super( props );
         this.state = {
             messageValue : '',
             response : [],
@@ -88,6 +82,7 @@ class SocketComponent extends Component {
 
     render () {
         const { response, messageValue } = this.state;
+        const { dispatch } = this.props;
         const data = response.map( ( item, index ) => {
             return <SocketView key={ index }>
                 { item }
@@ -107,11 +102,17 @@ class SocketComponent extends Component {
                     value={ messageValue }
                 />
                 <div className="text-center mt-4 change-state">
-                    <u onClick={ removeUsersOnStore }>{ 'Logout!' }</u>
+                    <u
+                        onClick={ () => dispatch( {
+                            type : "LOGOUT_USER"
+                        } ) }
+                    >
+                        { 'Logout!' }
+                    </u>
                 </div>
             </div>
         );
     }
 }
 
-export default SocketComponent;
+export default connect()( SocketComponent );

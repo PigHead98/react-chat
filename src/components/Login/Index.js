@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Login } from './Login';
 import { Register } from './Register';
 import { connect } from 'react-redux';
-import ReduxStore from '../ReduxStore';
+import ReduxStore from '../ReduxStore'; // can use this to dispatch redux without react-redux
 
 import './Index.scss';
 
