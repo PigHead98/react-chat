@@ -8,25 +8,49 @@ import ReduxStore from '../ReduxStore'; // can use this to dispatch redux withou
 import './Index.scss';
 
 const saveDataUsersToRedux = ( { message } ) => {
-    const { name, _id, avatar, contacts, accessToken, refreshToken } = message;
-    localStorage.setItem( "token", accessToken );
+    const { name, _id, avatar, email, contacts, accessToken, refreshToken } = message;
+
+    accessToken && localStorage.setItem( "token", accessToken );
+    refreshToken && localStorage.setItem( "token-refresh", refreshToken );
+
     ReduxStore.dispatch( {
         type : "LOGIN_USER",
-        payload : { name, _id, avatar, contacts, refreshToken }
+        payload : { name, _id, email, avatar, contacts }
     } );
     return
 };
 
-class Index extends Component {
+class IndexLogin extends Component {
     constructor ( props ) {
         super( props );
         this.state = {
             isLogin : true,
-            endPoint : 'http://192.168.1.2:8888/users'
+            endPoint : `${ this.props.endPoint }/users`
         };
         this.onSubmit = this.onSubmit.bind( this );
         this.detectErr = this.detectErr.bind( this );
         this.changeState = this.changeState.bind( this );
+    }
+
+    async componentDidMount () {
+        const { endPoint } = this.state;
+        let token = localStorage.getItem( "token" ) || null;
+        if ( !token ) {
+            return
+        }
+        try {
+            const dataUser = await axios( {
+                method : 'get',
+                url : `${ endPoint }/get-info-user-by-token`,
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'x-access-token' : token
+                }
+            } );
+            return saveDataUsersToRedux( dataUser.data );
+        } catch ( e ) {
+            console.log( e.response );
+        }
     }
 
     changeState () {
@@ -59,7 +83,7 @@ class Index extends Component {
     }
 
     detectErr ( err ) {
-        console.log(err);
+        console.log( err );
         console.log( 'something goes wrong' );
     }
 
@@ -77,4 +101,8 @@ class Index extends Component {
     }
 }
 
-export default connect()( Index );
+const mapStateToProps = ( state ) => ( {
+    endPoint : state.endPoint
+} );
+
+export default connect( mapStateToProps )( IndexLogin );

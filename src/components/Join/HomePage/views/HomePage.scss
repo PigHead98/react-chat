@@ -1,0 +1,29 @@
+.menu-view {
+  &__info-user {
+    font-size   : 42px;
+    text-shadow : 0 1px 8px #FF0000;
+    color       : orange;
+  }
+}
+
+.content-view {
+  font-family : monospace;
+  font-size   : 25px;
+
+  &__label {
+    box-shadow : none;
+  }
+
+  &__input {
+    font-size : 18px;
+    color     : black;
+  }
+
+  &__btn {
+    transition : all .3s linear;
+
+    &--find-contact {
+      font-size : 20px;
+    }
+  }
+}

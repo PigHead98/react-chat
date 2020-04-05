@@ -1,31 +1,35 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import SocketComponent from './components/SocketComponent';
-import Index from './components/Login/Index';
+import JoinController from './components/Join/JoinController';
+// import SocketComponent from './components/SocketComponent';
+import IndexLogin from './components/Login/Index';
 
 import logo from './logo.svg';
 import './App.css';
+
+const ViewLogin = <div>
+    <img src={ logo } className="App-logo" alt="logo"/>
+    <IndexLogin/>
+</div>;
 
 function App ( { currentUser } ) {
     return (
         <div className="App">
             <header className="App-header">
-                <img src={ logo } className="App-logo" alt="logo"/>
                 {
-                    Object.keys(currentUser).length > 0 ?
-                        <SocketComponent/>
+                    Object.keys( currentUser ).length > 0 ?
+                        <JoinController/>
                         :
-                        <Index/>
+                        ViewLogin
                 }
+
             </header>
         </div>
     );
 }
 
-const mapStateCurrentUserToProps = ( state ) => {
-    return {
-        currentUser : state.currentUser
-    }
-};
+const mapStateCurrentUserToProps = ( state ) => ( {
+    currentUser : state.currentUser
+} );
 export default connect( mapStateCurrentUserToProps )( App );
