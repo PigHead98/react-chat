@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import axios from 'axios';
 import { Login } from './Login';
 import { Register } from './Register';
@@ -20,7 +20,7 @@ const saveDataUsersToRedux = ( { message } ) => {
     return
 };
 
-class IndexLogin extends Component {
+class IndexLogin extends PureComponent {
     constructor ( props ) {
         super( props );
         this.state = {

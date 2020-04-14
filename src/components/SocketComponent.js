@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import axios from "axios";
 import { connect } from 'react-redux';
 import socketIOClient from "socket.io-client";
@@ -6,7 +6,7 @@ import socketIOClient from "socket.io-client";
 import SocketView from './views/SocketView';
 import SocketInput from './views/SocketInput';
 
-class SocketComponent extends Component {
+class SocketComponent extends PureComponent {
     constructor ( props ) {
         super( props );
         this.state = {

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
-
 export function Login ( { onSubmit } ) {
     const [ email, setEmail ] = useState( '' );
     const [ psw, setPsw ] = useState( '' );

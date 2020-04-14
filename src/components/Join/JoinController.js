@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import MenuView from './HomePage/views/MenuView';
 import ContentView from './HomePage/views/ContentView';
+import ChatController from './Chat/ChatController';
 import ModalShowContactComponent from '../ListGlobalComponents/ModalsComponent';
 import CardInfoUser from '../ListGlobalComponents/CardInfoUser';
 import './HomePage/views/HomePage.scss';
@@ -24,7 +25,7 @@ class JoinController extends Component {
         this.state = {
             isOpenModal : false,
             infoUserContact : null,
-            endPoint : `${this.props.endPoint}/users`
+            endPoint : `${ this.props.endPoint }/users`
         };
         this.onSearchContact = this.onSearchContact.bind( this );
     }
@@ -70,7 +71,7 @@ class JoinController extends Component {
 
     render () {
         const { isOpenModal, infoUserContact } = this.state;
-        const { dispatch, currentUser } = this.props;
+        const { dispatch, currentUser, stateRoom } = this.props;
 
         let name = ucFirst( currentUser.name );
         let cardInfoUser = infoUserContact ?
@@ -82,10 +83,8 @@ class JoinController extends Component {
             null
         ;
 
-        return (
-            <div style={ { textAlign : "center" } }>
-                <MenuView name={ name }/>
-                <div className="w-100 my-5"/>
+        const contentView = stateRoom ?
+            <section>
                 <ContentView onSubmit={ this.onSearchContact }/>
 
                 <ModalShowContactComponent
@@ -100,6 +99,14 @@ class JoinController extends Component {
                     ) }
                     cardInfoUser={ cardInfoUser }
                 />
+            </section> : <ChatController/>;
+
+        return (
+            <div style={ { textAlign : "center" } }>
+                <MenuView name={ name }/>
+                <div className="w-100 my-5"/>
+
+                { contentView }
 
                 <div className="text-center mt-4 change-state">
                     <u
@@ -117,7 +124,8 @@ class JoinController extends Component {
 
 const mapStateToProps = ( state ) => ( {
     currentUser : state.currentUser,
-    endPoint : state.endPoint
+    endPoint : state.endPoint,
+    stateRoom : state.stateRoom
 } );
 
 export default connect( mapStateToProps )( JoinController );

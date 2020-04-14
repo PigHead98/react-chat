@@ -1,0 +1,17 @@
+.section-chat {
+  &__box-up {
+    height     : 300px;
+    min-width  : 500px;
+    overflow-y : scroll;
+  }
+
+  &__box-down {
+    border-top : 1px solid lightslategrey;
+
+    &__input {
+      &:focus {
+        box-shadow : none;
+      }
+    }
+  }
+}

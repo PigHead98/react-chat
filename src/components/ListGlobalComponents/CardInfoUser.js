@@ -1,7 +1,18 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import './ListStyle/CardInfoUser.scss';
 
-export default function CardInfoUser ( { avatarCard = "https://picsum.photos/70", titleCard, descriptionCard } ) {
+CardInfoUser.propTypes = {
+    avatarCard : PropTypes.string,
+    titleCard : PropTypes.string,
+    descriptionCard : PropTypes.string,
+};
+
+CardInfoUser.defaultProps = {
+    avatarCard : "https://picsum.photos/70"
+};
+
+export default function CardInfoUser ( { avatarCard, titleCard, descriptionCard } ) {
     return (
         <div className="d-flex card-info align-items-center ju">
             <div className="card-info__img">

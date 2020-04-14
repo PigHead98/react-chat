@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
-export default function ContentView ( { onSubmit, onChange, onKeyUp, value } ) {
+export default function ContentView ( { onSubmit } ) {
     const [ search, setSearch ] = useState( '' );
 
     return (
